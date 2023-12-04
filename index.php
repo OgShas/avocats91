@@ -22,6 +22,7 @@ include 'src/MyCrawler.php';
             ->extract([
                 'firstName' => Dom::cssSelector('a')->last()->innerText() ,
                 'lastname' => Dom::cssSelector('a')->first()->innerText(),
+                'Contact Details' =>Dom::cssSelector('.cbUserListCol2')->text(),
                 'link' => Dom::cssSelector('a')->first()->link(),
         ])->addLaterToResult()
     )
@@ -36,21 +37,20 @@ include 'src/MyCrawler.php';
             ->useInputKey('Link-Response')
             ->keepInputData()
         ->extract([
-            'Date of swearing in:' => Dom::cssSelector('.cbpp-profile p:nth-child(3)')->text(),
-            'Contact details' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span')->text(),
-            'Email' => Dom::cssSelector('.cbpp-profile p:nth-child(6) br+span>span')->first()->innerText(), //Can't select email
+            'Date of swearing in:' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->innerText(),
+            'Phone/Fax' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
+            'Email' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4) span.cbMailRepl')->text(),  //Can't select email
         ])
             ->refineOutput('Date of swearing in:',function (mixed $output) {
                 if (is_array($output)) {
                     return $output;
                 }
-
-                $output = str_replace(['Date de prestation de serment : ', '|'], '', $output);
+               $output = str_replace(['Date de prestation de serment : ', ' | '], '', $output);
                 return $output;
             })
             ->addToResult([
                 'Date of swearing in:',
-                'Contact details',
+                'Phone/Fax',
                 'Email',
             ])
     )->runAndTraverse();
