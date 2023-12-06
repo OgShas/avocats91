@@ -8,6 +8,7 @@ use Crwlr\Crawler\Steps\Loading\Http\Paginators\StopRules\PaginatorStopRules;
 use Crwlr\Crawler\Stores\SimpleCsvFileStore;
 use Crwlr\Crawler\Steps\Dom;
 use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -59,11 +60,12 @@ include 'src/MyCrawler.php';
                 $phoneUtil = PhoneNumberUtil::getInstance();
                 try {
                     $phoneNumberProto = $phoneUtil->parse($PhoneNumber, "FR");
-                    // Return the parsed phone number instead of dumping it
-                    return $phoneNumberProto;
+                    $formatedPhoneNumber = $phoneUtil->format($phoneNumberProto,PhoneNumberFormat::INTERNATIONAL);
+
+                    return $formatedPhoneNumber;
                 } catch (NumberParseException $e) {
-                    // Handle parsing failure if needed
-                    return null; // or return an error message
+
+                    return null;
                 }
             })
 
@@ -82,7 +84,9 @@ include 'src/MyCrawler.php';
                 $phoneUtil = PhoneNumberUtil::getInstance();
                 try {
                     $phoneNumberProto = $phoneUtil->parse($PhoneNumber, "FR");
-                    return $phoneNumberProto;
+                    $formatedPhoneNumber = $phoneUtil->format($phoneNumberProto,PhoneNumberFormat::INTERNATIONAL);
+
+                    return $formatedPhoneNumber;
                 } catch (NumberParseException $e) {
                     return null;
                 }
