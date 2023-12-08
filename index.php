@@ -23,11 +23,17 @@ include 'src/MyCrawler.php';
     ->addStep(
         Html::each('#cbUsersListInner .cbUserListTable [class^="sectiontableentry"]')
             ->extract([
-                'firstName' => Dom::cssSelector('a')->last()->innerText() ,
-                'lastname' => Dom::cssSelector('a')->first()->innerText(),
-                'Contact Details' =>Dom::cssSelector('.cbUserListCol2')->text(),
+                'First Name' => Dom::cssSelector('a')->last()->innerText() ,
+                'Last Name' => Dom::cssSelector('a')->first()->innerText(),
+                'Mailing Street' =>Dom::cssSelector('.cbUserListCol2')->text(),
+                'Mailing City' =>Dom::cssSelector('.cbUserListCol3')->text(),
                 'link' => Dom::cssSelector('a')->first()->link(),
-        ])->addLaterToResult()
+        ])->addToResult([
+                 'First Name',
+                'Last Name',
+                'Mailing Street',
+                'Mailing City',
+            ])
     )
     ->addStep(
         Http::get()
@@ -40,13 +46,23 @@ include 'src/MyCrawler.php';
             ->useInputKey('Link-Response')
             ->keepInputData()
         ->extract([
-            'Date of swearing in:' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
+            'Assermenté(e) en' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
+            'Prestation de serment' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
+            'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Phone' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
-            'Fax' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Email' => Dom::cssSelector('.cbpp-profile [class^="cbMailRepl"]')->text(),  //Can't select email
+            'Website' => Dom::cssSelector('.cbpp-profile [class^="cbMailRepl"]')->text(),  //Can't select Website
+            'Mailing Postal Code' => Dom::cssSelector('#cbProfileInner > div > div.cbPosTabMain > div > p:nth-child(6) > span:nth-child(2)')->text(),
+            'Full Name'=>Dom::cssSelector('h2')->text(),
+            'Région affiliée'=> 'No Selector',
+            'Entity' => 'No Selector',
+            'Status Prospect' => 'invalid selector',
+            'Numero de Toque' => 'invalid selector',
+            'Mailing Country' => 'invalid selector',
         ])
+
             //Refine Phone
-            ->refineOutput('Phone', function (mixed $output) {
+            ->refineOutput('Mobile', function (mixed $output) {
                 if (is_array($output)) {
                     return $output;
                 }
@@ -68,9 +84,8 @@ include 'src/MyCrawler.php';
                     return null;
                 }
             })
-
             //Refine Fax
-            ->refineOutput('Fax', function (mixed $output) {
+            ->refineOutput('Phone', function (mixed $output) {
                 if (is_array($output)) {
                     return $output;
                 }
@@ -91,7 +106,6 @@ include 'src/MyCrawler.php';
                     return null;
                 }
             })
-
             //Date of Swearing in refine
             ->refineOutput('Date of swearing in:',function (mixed $output) {
                 if (is_array($output)) {
@@ -100,12 +114,59 @@ include 'src/MyCrawler.php';
                $output = str_replace(['Date de prestation de serment : ', ' | '], '', $output);
                 return $output;
             })
+            //Refine Assermenté(e) en
+            ->refineOutput('Assermenté(e) en', function (mixed $output) {
+                if (is_array($output)) {
+                    return $output;
+                }
+
+                $dateParts = explode('/', $output);
+
+                $year = end($dateParts);
+
+                return $year;
+            })
+            //refine Prestation de serment
+            ->refineOutput('Prestation de serment',function (mixed $output){
+                if(is_array($output)){
+                    return $output;
+                }
+
+                $newData = substr($output,strpos($output,':') + 1);
+
+                return $newData;
+            })
+            //Hard Data
+            ->refineOutput(function (array $output) {
+                $output['Barreau'] = 'L\'ORDRE';
+                $output['country code'] = 'fr';
+                $output[ 'Numero de Toque'] = null;
+                $output['Mailing Country'] = 'France';
+                $output['Région affiliée'] = 'Paris';
+                $output['Entity'] = 'LAW-FR';
+                $output['Statut Prospect'] = 'À qualifier';
+
+                return $output;
+            })
+
+
 
             ->addToResult([
-                'Date of swearing in:',
+                'Full Name',
+                'Assermenté(e) en',
+                'Prestation de serment',
+                'Mobile',
                 'Phone',
-                'Fax',
                 'Email',
+                'Website',
+                'Mailing Postal Code',
+                'Barreau',
+                'country code',
+                'Numero de Toque',
+                'Mailing Country',
+                'Région affiliée',
+                'Entity',
+                'Statut Prospect'
             ])
     )->runAndTraverse();
 

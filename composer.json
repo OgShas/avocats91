@@ -1,7 +1,8 @@
 {
     "require": {
         "crwlr/crawler": "^1.3",
-        "giggsey/libphonenumber-for-php": "^8.13"
+        "giggsey/libphonenumber-for-php": "^8.13",
+        "symfony/string": "^6.4"
     },
     "autoload": {
         "psr-4": {
