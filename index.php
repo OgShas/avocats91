@@ -51,8 +51,8 @@ include 'src/MyCrawler.php';
             'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Phone' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Email' => Dom::cssSelector('.cbpp-profile [class^="cbMailRepl"]')->text(),  //Can't select email
-            'Website' => Dom::cssSelector('.cbpp-profile [class^="cbMailRepl"]')->text(),  //Can't select Website
-            'Mailing Postal Code' => Dom::cssSelector('#cbProfileInner > div > div.cbPosTabMain > div > p:nth-child(6) > span:nth-child(2)')->text(),
+            'Website' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4) span.a')->text(),  //Can't select Website
+            'Mailing Postal Code' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(2)')->text(),
             'Full Name'=>Dom::cssSelector('h2')->text(),
             'Région affiliée'=> 'No Selector',
             'Entity' => 'No Selector',
@@ -61,6 +61,18 @@ include 'src/MyCrawler.php';
             'Mailing Country' => 'invalid selector',
         ])
 
+            //refine Mailing Postal Code
+            ->refineOutput('Mailing Postal Code', function (mixed $output) {
+                if (is_array($output)) {
+                    return $output;
+                }
+
+                // Extract digits from the string using a regular expression
+                preg_match_all('/\d+/', $output, $matches);
+                $digits = implode('', $matches[0]);
+
+                return $digits;
+            })
             //Refine Phone
             ->refineOutput('Mobile', function (mixed $output) {
                 if (is_array($output)) {
