@@ -48,8 +48,8 @@ include 'src/MyCrawler.php';
         ->extract([
             'Assermenté(e) en' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
             'Prestation de serment' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
-            'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Phone' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
+            'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
             'Email' => Dom::cssSelector('.cbpp-profile [class^="cbMailRepl"]')->text(),  //Can't select email
             'Website' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4) span.a')->text(),  //Can't select Website
             'Mailing Postal Code' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(2)')->text(),
@@ -74,7 +74,7 @@ include 'src/MyCrawler.php';
                 return $digits;
             })
             //Refine Phone
-            ->refineOutput('Mobile', function (mixed $output) {
+            ->refineOutput('Phone', function (mixed $output) {
                 if (is_array($output)) {
                     return $output;
                 }
@@ -97,7 +97,7 @@ include 'src/MyCrawler.php';
                 }
             })
             //Refine Fax
-            ->refineOutput('Phone', function (mixed $output) {
+            ->refineOutput('Mobile', function (mixed $output) {
                 if (is_array($output)) {
                     return $output;
                 }
