@@ -1,6 +1,6 @@
 /.idea
 /vendor
-/cache
+/cache/*
 !/cache/.gitignore
-/store
+/store/*
 !/store/.gitignore
