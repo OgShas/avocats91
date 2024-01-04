@@ -9,9 +9,7 @@ use Crwlr\Crawler\Loader\Http\Politeness\TimingUnits\MultipleOf;
 use Crwlr\Crawler\Loader\LoaderInterface;
 use Crwlr\Crawler\UserAgents\BotUserAgent;
 use Crwlr\Crawler\UserAgents\UserAgentInterface;
-use Generator;
 use Psr\Log\LoggerInterface;
-use Crwlr\Crawler\Steps\Step;
 
 class MyCrawler extends HttpCrawler
 {
@@ -37,18 +35,15 @@ class MyCrawler extends HttpCrawler
                     ->ttl(31536000)
                     ->useCompression()
             )
-            ->retryCachedErrorResponses()
-        ;
+            ->retryCachedErrorResponses();
 
         $loader
             ->robotsTxt()
-            ->ignoreWildcardRules()
-        ;
+            ->ignoreWildcardRules();
 
         $loader
             ->throttle()
-            ->waitBetween(new MultipleOf(10.0), new MultipleOf(15.0))
-        ;
+            ->waitBetween(new MultipleOf(2.0), new MultipleOf(4.0));
 
         return $loader;
     }
