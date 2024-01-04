@@ -1,16 +1,14 @@
 <?php
 
 use Crawler\MyCrawler;
+use Crwlr\Crawler\Crawler;
+use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Html;
 use Crwlr\Crawler\Steps\Loading\Http;
-use Crwlr\Crawler\Steps\Loading\Http\Paginator;
-use Crwlr\Crawler\Steps\Loading\Http\Paginators\StopRules\PaginatorStopRules;
 use Crwlr\Crawler\Stores\SimpleCsvFileStore;
-use Crwlr\Crawler\Steps\Dom;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
-use Symfony\Component\DomCrawler\Crawler;
 use function Symfony\Component\String\u;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -20,7 +18,9 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
 (new MyCrawler())
     ->setStore(new SimpleCsvFileStore('./store', 'avocats'))
     ->input('https://www.avocats91.com/recherche-par-nom/')
-    ->addStep(Http::get()->paginate('.art-post .cbUserListPagination')
+    ->addStep(
+        Http::get()
+            ->paginate('.art-post .cbUserListPagination')
     )
     ->addStep(
         Html::each('#cbUsersListInner .cbUserListTable [class^="sectiontableentry"]')
@@ -43,7 +43,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
             ->useInputKey('Barreau URL profile')
     )
     ->addStep(
-        \Crwlr\Crawler\Crawler::group()
+        Crawler::group()
             ->addStep(
                 Html::first('#cbProfileInner .cbpp-profile')
                     ->extract([
@@ -194,4 +194,3 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
             )
     )
     ->runAndTraverse();
-
