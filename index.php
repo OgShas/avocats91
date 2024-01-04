@@ -139,7 +139,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         return $newData;
                     })
                     ->refineOutput(function (array $output) {
-                        $output['Barreau'] = 'L\'ORDRE';
+                        $output['Barreau'] = 'Essonne';
                         $output['country code'] = 'fr';
                         $output['Numero de Toque'] = null;
                         $output['Mailing Country'] = 'France';
