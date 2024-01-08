@@ -53,11 +53,12 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
                         'Mailing Postal Code' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(2)')->text(),
                         'Full Name' => Dom::cssSelector('h2')->text(),
-                        'Région affiliée' => 'No Selector',
-                        'Entity' => 'No Selector',
+                        'Région affiliée' => 'Invalid Selector',
+                        'Entity' => 'Invalid Selector',
                         'Status Prospect' => 'invalid selector',
                         'Numero de Toque' => 'invalid selector',
                         'Mailing Country' => 'invalid selector',
+                        'specialities' => 'invalid selector',
                     ])
                     ->refineOutput('Mailing Postal Code', function (mixed $output) {
                         if (is_array($output)) {
@@ -146,6 +147,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         $output['Région affiliée'] = 'Paris';
                         $output['Entity'] = 'LAW-FR';
                         $output['Statut Prospect'] = 'À qualifier';
+                        $output['specialities'] = null;
 
                         return $output;
                     })
@@ -162,7 +164,8 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         'Mailing Country',
                         'Région affiliée',
                         'Entity',
-                        'Statut Prospect'
+                        'Statut Prospect',
+                        'specialities'
                     ])
             )
             ->addStep(
