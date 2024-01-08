@@ -16,7 +16,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $phoneNumberUtil = PhoneNumberUtil::getInstance();
 
 (new MyCrawler())
-    ->setStore(new SimpleCsvFileStore('./store', 'avocats'))
+    ->setStore(new SimpleCsvFileStore('./store', 'avocats91.com'))
     ->input('https://www.avocats91.com/recherche-par-nom/')
     ->addStep(
         Http::get()
