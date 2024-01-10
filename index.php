@@ -59,6 +59,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         'Numero de Toque' => 'invalid-selector',
                         'Mailing Country' => 'invalid-selector',
                         'Specialities' => 'invalid-selector',
+                        'Law firm name' => 'invalid-selector',
                     ])
                     ->refineOutput('Mailing Postal Code', function (mixed $output) {
                         if (is_array($output)) {
@@ -148,6 +149,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         $output['Entity'] = 'LAW-FR';
                         $output['Statut Prospect'] = 'À qualifier';
                         $output['specialities'] = null;
+                        $output['Law firm name'] = null;
 
                         return $output;
                     })
@@ -165,7 +167,8 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         'Région affiliée',
                         'Entity',
                         'Statut Prospect',
-                        'Specialities'
+                        'Specialities',
+                        'Law firm name'
                     ])
             )
             ->addStep(
