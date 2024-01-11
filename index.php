@@ -59,7 +59,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         'Assermenté(e) en' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
                         'Prestation de serment' => Dom::cssSelector('.cbpp-profile p:nth-child(3) span')->last()->text(),
                         'Phone' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
-                        'Mobile' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(4)')->text(),
+                        'Mobile' => 'invalid-selector',
                         'Mailing Postal Code' => Dom::cssSelector('.cbpp-profile p:nth-child(6) span:nth-child(2)')->text(),
                         'Full Name' => Dom::cssSelector('h2')->text(),
                         'Région affiliée' => 'invalid-selector',
@@ -95,26 +95,6 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                                 return $result;
                             }
 
-                            $phoneNumber = $phoneNumberUtil->parse($result, "FR");
-
-                            return $phoneNumberUtil->format($phoneNumber, PhoneNumberFormat::E164);
-                        } catch (NumberParseException) {
-                            dd('error with phone', $result);
-                        }
-                    })
-                    ->refineOutput('Mobile', function (mixed $output) use ($phoneNumberUtil) {
-                        if (is_array($output)) {
-                            return $output;
-                        }
-
-                        $parts = explode(' - ', $output);
-                        $result = isset($parts[1]) ? $parts[1] : '';
-                        $result = str_replace(['Fax', ':', '.', ' '], '', $result);
-
-                        try {
-                            if ($result === '') {
-                                return null;
-                            }
                             $phoneNumber = $phoneNumberUtil->parse($result, "FR");
 
                             return $phoneNumberUtil->format($phoneNumber, PhoneNumberFormat::E164);
@@ -159,6 +139,7 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                         $output['Statut Prospect'] = 'À qualifier';
                         $output['specialities'] = null;
                         $output['Law firm name'] = null;
+                        $output['Mobile'] = null;
 
                         return $output;
                     })
