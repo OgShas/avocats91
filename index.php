@@ -30,7 +30,16 @@ $phoneNumberUtil = PhoneNumberUtil::getInstance();
                 'Mailing Street' => Dom::cssSelector('.cbUserListCol2')->text(),
                 'Mailing City' => Dom::cssSelector('.cbUserListCol3')->text(),
                 'Barreau URL profile' => Dom::cssSelector('a')->first()->link(),
-            ])->addToResult([
+            ])
+            ->refineOutput('Barreau URL profile', function (mixed $output) {
+                if (is_array($output)) {
+                    return $output;
+                }
+
+                $output = str_replace('https://www.avocats91.com/recherche-par-nom/userslist/', '', $output);
+                return $output;
+            })
+            ->addToResult([
                 'First Name',
                 'Last Name',
                 'Mailing Street',
